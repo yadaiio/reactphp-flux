@@ -85,8 +85,8 @@ use React\Promise\PromiseInterface;
  *
  *             return json_decode($response->getBody());
  *         },
- *         function (Exception $error) {
- *             var_dump('There was an error', $error->getMessage());
+ *         function (Exception $e) {
+ *             echo 'Error: ' . $e->getMessage() . PHP_EOL;
  *
  *             throw $error;
  *         }
@@ -256,6 +256,10 @@ use React\Promise\PromiseInterface;
  * });
  *
  * $source->pipe($gunzip)->pipe($ndjson)->pipe($transformer)->pipe($dest);
+ *
+ * $transformer->on('error', function (Exception $e) {
+ *     echo 'Error: ' . $e->getMessage() . PHP_EOL;
+ * });
  * ```
  *
  * Keep in mind that the transformation handler may return a rejected promise.
@@ -314,6 +318,8 @@ final class Transformer extends EventEmitter implements DuplexStreamInterface
      *
      * $promise->then(function ($count) {
      *     echo 'All ' . $count . ' jobs successful!' . PHP_EOL;
+     * }, function (Exception $e) {
+     *     echo 'Error: ' . $e->getMessage() . PHP_EOL;
      * });
      * ```
      *
@@ -466,6 +472,8 @@ final class Transformer extends EventEmitter implements DuplexStreamInterface
      *
      * $promise->then(function (ResponseInterface $response) {
      *     echo 'First successful job: ' . $response->getBody() . PHP_EOL;
+     * }, function (Exception $e) {
+     *     echo 'Error: ' . $e->getMessage() . PHP_EOL;
      * });
      * ```
      *
